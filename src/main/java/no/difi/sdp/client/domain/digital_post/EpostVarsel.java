@@ -18,12 +18,14 @@ package no.difi.sdp.client.domain.digital_post;
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.util.Arrays.asList;
+
 public class EpostVarsel extends Varsel {
 
     private String epostadresse;
 
-    private EpostVarsel(String epostadresse, String varslingsTekst) {
-        super(varslingsTekst);
+    private EpostVarsel(String epostadresse, String varslingsTekst, List<Integer> etterDager) {
+        super(varslingsTekst, etterDager);
         this.epostadresse = epostadresse;
     }
 
@@ -32,19 +34,36 @@ public class EpostVarsel extends Varsel {
     }
 
     /**
+     * Oppretter epostvarsel til gitt epostadresse og med gitt tekst. Som standard
+     * vil varselet sendes samme dato brevet tilgjengeliggjøres i mottakers
+     * digitale postkasse, samt et tilleggsvarsel etter 7 dager dersom mottaker ikke har
+     * skaffet seg tilgang til brevet.
+     * Dersom man ønsker å tilpasse antall og når varsler sendes kan
+     * {@link EpostVarsel.Builder#varselEtterDager(List)} brukes.
+     * <p>
+     * Ref:
+     * <a href="http://begrep.difi.no/SikkerDigitalPost/begrep/Varsler">begrep.difi.no/SikkerDigitalPost/begrep/Varsler</a>
+     *
      * @param epostadresse Mottakerens epostadresse som det skal sendes varsel til.
      * @param varslingsTekst Avsenderstyrt varslingstekst som skal inngå i varselet.
      */
     public static Builder builder(String epostadresse, String varslingsTekst) {
-        return new Builder(epostadresse, varslingsTekst);
+        return new Builder(epostadresse, varslingsTekst, asList(0, 7));
     }
 
     public static class Builder {
         private EpostVarsel target;
         private boolean built = false;
 
-        private Builder(String epostadresse, String varslingsTekst) {
-            target = new EpostVarsel(epostadresse, varslingsTekst);
+        private Builder(String epostadresse, String varslingsTekst, List<Integer> etterDager) {
+            target = new EpostVarsel(epostadresse, varslingsTekst, etterDager);
+        }
+
+        /**
+         * @see #varselEtterDager(List)
+         */
+        public Builder varselEtterDager(Integer ... varselEtterDager) {
+        	return varselEtterDager(asList(varselEtterDager));
         }
 
         /**

@@ -22,11 +22,16 @@ import static java.util.Arrays.asList;
 public abstract class Varsel {
 
     protected Varsel(String varslingsTekst) {
+        this(varslingsTekst, asList(0));
+    }
+
+    protected Varsel(String varslingsTekst, List<Integer> dagerEtter) {
         this.varslingsTekst = varslingsTekst;
+        this.dagerEtter = dagerEtter;
     }
 
     protected String varslingsTekst;
-    protected List<Integer> dagerEtter = asList(0);
+    protected List<Integer> dagerEtter;
 
     public String getVarslingsTekst() {
         return varslingsTekst;
